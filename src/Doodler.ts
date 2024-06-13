@@ -110,7 +110,7 @@ export class Doodler {
 
         image.src = this.src;
 
-        this.y -= 60;
+        this.y -= 30;
 
         // image.onload = () => {
 

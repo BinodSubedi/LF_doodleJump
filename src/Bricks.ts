@@ -37,9 +37,9 @@ export class Bricks{
     update(ctx: CanvasRenderingContext2D, x: number | null, y: number | null) {
 
 
-        if (x !== null) {
+        if (x != null) {
             this.x = x;
-        } else if (y !== null) {
+        } else if (y != null) {
             this.y = y;
         }
 

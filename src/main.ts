@@ -52,11 +52,13 @@ const levelBrickSpeed = (speed:number)=>{
     return 0.2;
   }else if(speed < 20){
     return 0.4;
-  }else if (speed <40){
+  } else if (speed < 40) {
     return 0.7;
-  }else{
-    return 0.8;
   }
+
+  return 0.8;
+
+
 
 }
 
@@ -74,17 +76,20 @@ for(let i=0; i<6; i++){
 
 let score = 0;
 
-enum GameStage{
-  start,
-  playing
-};
+// enum GameStage{
+//   start,
+//   playing
+// };
 
-let gameStage:GameStage = GameStage.start;
+// let gameStage:GameStage = GameStage.start;
 
 const mainCanvas = new Canvas(`${canvasInput.height}px`,`${canvasInput.width}px`,'canvas','app');
 const canvas: HTMLCanvasElement = mainCanvas.create();
 
 const ctx: CanvasRenderingContext2D | null = canvas.getContext('2d');
+
+
+let gamestate:number = 0;
 
 const backgroundImage = new Image();
 
@@ -92,60 +97,7 @@ backgroundImage.src = './assets/soccer-bck.png';
 
 if(ctx != null){
 
-  
-  // backgroundImage.onload = ()=>{
 
-  // ctx.drawImage(backgroundImage, 0,0,canvasInput.width, canvasInput.height);
-
-  // // const checkRect = new Bricks(undefined);
-  // // checkRect.create(ctx);
-
-
-  //       bricksArr.forEach((el,i)=>{
-
-  //         // switch(score){
-  //         //   case (score < 20):
-            
-
-  //         // }
-
-  //         console.log(el)
-
-  //         el.create(ctx);
-
-  //       })
-
-
-  //   const doodlerHolderBrick = new Bricks({ x: doodler.x, y: doodler.y + doodler.height+ 2, height: 3, width: 60 })
-  //   doodlerHolderBrick.create(ctx);
-
-
-
-
-  // }
-
-
-
-
-
-
-  
-
-  const playerUpdater = ()=>{
-
-  }
-
- 
-  const doodlerHolderBrick = new Bricks({ x: doodlerInput.x, y: doodlerInput.y + doodlerInput.height, height: 3, width: 60 })
-
-
-  const bricksRandomizer = ()=>{
-
-    const x = 20 + Math.floor(Math.random() * 100);
-
-    // const y = 
-
-  }
 
   const gravity = () => {
     let stopUpdating = false;
@@ -158,7 +110,7 @@ if(ctx != null){
    ctx.drawImage(backgroundImage, 0, 0, canvasInput.width, canvasInput.height);
 
 
-      bricksArr.forEach((el, i) => {
+      bricksArr.forEach((el) => {
 
         // switch(score){
         //   case (score < 20):
@@ -178,15 +130,16 @@ if(ctx != null){
           // }
 
 
-          // FIXME: here is the problem, probably in the x-axis we will come back to it later
-        if(((doodler.y - doodler.height) - (el.y- el.height) >= -2 && (doodler.y - doodler.height) - (el.y- el.height) <= 0  )&& ((el.x + el.width) >= doodler.x && ((el.x - el.width)+2 <= doodler.x))){
 
-          console.log('main-checker::',(doodler.y - doodler.height) - (el.y- el.height));
-          console.log("el.y, doodler.y, el.height, doodler.height",el.y,doodler.y, el.height, doodler.height)
+        if (
+    (doodler.y >= el.y - doodler.height && doodler.y <= el.y + 2) && // Vertical alignment check
+    (doodler.x + doodler.width-5 >= el.x && doodler.x <= el.x + el.width-5) // Horizontal alignment check
+) {
+    // console.log('main-checker::', doodler.y - el.y);
+    // console.log("el.y, doodler.y, el.height, doodler.height", el.y, doodler.y, el.height, doodler.height);
+    stopUpdating = true;
+}
 
-          stopUpdating = true;
-
-        }
 
       })
 
@@ -221,10 +174,10 @@ if(ctx != null){
     //  })
 
 
-   ctx.font = "14px serif";
-  ctx.fillStyle = 'white'
-  ctx.fillText(score.toString(), 24,15, 30);
-  
+    ctx.font = "14px serif";
+    ctx.fillStyle = 'white'
+    ctx.fillText(score.toString(), 24, 15, 30);
+
    
   }
 
@@ -240,19 +193,23 @@ if(ctx != null){
    ctx.drawImage(backgroundImage, 0, 0, canvasInput.width, canvasInput.height);
 
 
-      bricksArr.forEach((el, i) => {
+      bricksArr.forEach((el) => {
 
 
-        if (el.y > 180) {
+        if (el.y >= 160 && el.y <= 180) {
 
           score++;
           
-          el.update(ctx, null, 0);
+          console.log('touch down')
+          // el.update(ctx, null, 0);
+          el.y = 0
+          el.x = 40 + Math.floor(Math.random()*120) 
+          // el.update(ctx,40+ Math.random() * 80, 0)
 
         } else {
 
           el.update(ctx, null, el.y + levelBrickSpeed(score));
-          console.log(el.y);
+          // console.log(el.y);
 
         }
 
@@ -265,61 +222,83 @@ if(ctx != null){
 
   const updateFrames = () => {
 
+    if (gamestate == 1) {
 
-    levelMover();
-     gravity();
- 
+      levelMover();
+      gravity();
+
+    }
+
 
     requestAnimationFrame(updateFrames);
 
   }
 
 
+
  backgroundImage.onload = () => {
 
-      ctx.drawImage(backgroundImage, 0, 0, canvasInput.width, canvasInput.height);
-
-      // const checkRect = new Bricks(undefined);
-      // checkRect.create(ctx);
-
-      bricksArr.forEach((el, i) => {
-
-        // switch(score){
-        //   case (score < 20):
 
 
-        // }
+    ctx.drawImage(backgroundImage, 0, 0, canvasInput.width, canvasInput.height);
 
-if(i == 2){
-          
-          el.x = 140;
-          doodler.x = el.x;
-          doodler.y = el.y - 25;
+    // const checkRect = new Bricks(undefined);
+    // checkRect.create(ctx);
 
-        }else{
+    bricksArr.forEach((el, i) => {
+
+      // switch(score){
+      //   case (score < 20):
+
+
+      // }
+
+      if (i == 2) {
+
+        el.x = 140;
+        doodler.x = el.x;
+        doodler.y = el.y - 25;
+
+      } else {
 
         // console.log(el)
         const x = 20 + Math.floor(Math.random() * 120);
         el.x = x;
 
-        }
+      }
 
-        el.create(ctx);
+      el.create(ctx);
 
-      })
-
-
-      // const doodlerHolderBrick = new Bricks({ x: doodlerInput.x, y: doodlerInput.y + doodler.height + 2, height: 3, width: 60 })
-      // doodlerHolderBrick.create(ctx);
+    })
 
 
-      updateFrames();
+    // const doodlerHolderBrick = new Bricks({ x: doodlerInput.x, y: doodlerInput.y + doodler.height + 2, height: 3, width: 60 })
+    // doodlerHolderBrick.create(ctx);
 
-    
-    }
+    // if(gamestate = 0){
+
+
+    // ctx.clearRect(0,0,canvasInput.width,canvasInput.height)
+    // ctx.drawImage(startScreen,0,0,canvasInput.width, canvasInput.height)
+
+   ctx.fillStyle = 'black'
+   ctx.fillRect(0, 0, canvasInput.width, canvasInput.height);
+   ctx.fillStyle = 'white'
+   ctx.font = "15px serif";
+   ctx.fillText("Press Enter to start", canvasInput.width/2 - 100, 85, 150)
+
+   // }
 
 
 
+    updateFrames();
+
+
+
+
+
+
+}
 
 }
 
@@ -333,6 +312,9 @@ window.addEventListener('keydown',(e)=>{
       break;
     case 'ArrowUp':
       doodler.jump(ctx!);
+      break;
+    case 'Enter':
+      gamestate = 1;
       break;
   }
 })
