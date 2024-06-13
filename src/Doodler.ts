@@ -81,6 +81,12 @@ export class Doodler {
 
         // image.onload = () => {
 
+        if(this.x < 0){
+            this.x = 258
+        }
+
+        console.log(this.x);
+
         ctx.drawImage(image, this.x, this.y, this.width, this.height);
 
 
@@ -97,6 +103,10 @@ export class Doodler {
         this.x += 8;
 
         // image.onload = () => {
+
+        if(this.x > 258){
+            this.x = 0
+        }
 
         ctx.drawImage(image, this.x, this.y, this.width, this.height);
 
